@@ -63,6 +63,7 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
 
     def draw(self, context):
         lay = self.layout
+        lay.prop(context.scene.modeling_tools_settings, 'rotation_or_face_normals')
         col = lay.column(align = True)
         row_a = col.row(align = True)
         row_a.operator('modeling_tools.ct_ot_clear_tt_set', icon = 'X', text = '').tt_set = 'a'
@@ -73,8 +74,7 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
         row_b = col.row(align = True)
         row_b.operator('modeling_tools.ct_ot_clear_tt_set', icon = 'X', text = '').tt_set = 'b'
         row_b.operator('modeling_tools.ct_ot_replace_tt_set_with_selection', text = f'To {len(context.scene.modeling_tools_ct_set_b)} objects').tt_set = 'b'
-        col.separator()
-        col.operator('modeling_tools.ct_ot_delete_tt_set_a_objects', icon = 'X')
+        lay.operator('modeling_tools.ct_ot_delete_tt_set_a_objects', icon = 'TRASH')
 
 
 ##############################################################################

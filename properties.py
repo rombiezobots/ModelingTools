@@ -15,7 +15,10 @@ reload(functions)
 
 
 class ModelingToolsSettings(bpy.types.PropertyGroup):
-    pass
+    rotation_or_face_normals: bpy.props.EnumProperty(name='Rotation', items=[
+        ('use_transforms', 'Use Object Rotation', 'Use the objects\' transform values'),
+        ('use_face_normals', 'Use First Face Normal', 'Use the normal of the first face found in each object (Y-up)')
+    ])
 
 
 class WrapperObject(bpy.types.PropertyGroup):

@@ -122,25 +122,34 @@ def snap_rotation(context):
 def transfer_transforms(context):
     """Copy transformation values from a set of objects to another"""
 
-    set_a = context.scene.modeling_tools_ct_set_a
-    set_b = context.scene.modeling_tools_ct_set_b
+    scene = context.scene
+    set_a = scene.modeling_tools_ct_set_a
+    set_b = scene.modeling_tools_ct_set_b
 
     if len(set_a) != len(set_b):
-        raise RuntimeError("Both sets of objects must have equal length.")
+        raise RuntimeError('Both sets of objects must have equal length.')
 
     else:
         for ob in set_a:
-            if ob.obj_name not in context.scene.objects.keys():
-                raise RuntimeError(f"Object '{ob.obj_name}' doesn't exist anymore.")
+            if ob.obj_name not in scene.objects.keys():
+                raise RuntimeError(f'Object {ob.obj_name} doesn\'t exist anymore.')
         for ob in set_b:
-            if ob.obj_name not in context.scene.objects.keys():
-                raise RuntimeError(f"Object '{ob.obj_name}' doesn't exist anymore.")
+            if ob.obj_name not in scene.objects.keys():
+                raise RuntimeError(f'Object {ob.obj_name} doesn\'t exist anymore.')
         for index, ob in enumerate(set_b):
-            object_a = context.scene.objects[set_a[index].obj_name]
-            object_b = context.scene.objects[ob.obj_name]
-            object_b.location = object_a.location
-            object_b.rotation_euler = object_a.rotation_euler
-            object_b.scale = object_a.scale
+            object_a = scene.objects[set_a[index].obj_name]
+            object_b = scene.objects[ob.obj_name]
+            if scene.modeling_tools_settings.rotation_or_face_normals == 'use_face_normals':
+                try:
+                    object_b.location = object_a.location
+                    object_b.rotation_euler = object_a.data.polygons[0].normal
+                    object_b.scale = object_a.scale
+                except:
+                    raise RuntimeError(f'{object_a.data.name} is not a mesh, or it doesn\'t have any faces.')
+            else:
+                object_b.location = object_a.location
+                object_b.rotation_euler = object_a.rotation_euler
+                object_b.scale = object_a.scale
 
 
 def get_active_object_collection_offset(self) -> tuple:
