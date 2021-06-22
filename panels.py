@@ -34,6 +34,7 @@ class VIEW3D_PT_modeling(bpy.types.Panel):
         lay = self.layout
         lay.use_property_decorate = False
         lay.operator('modeling_tools.modeling_ot_select_unsubdivided', icon='MOD_SUBSURF')
+        lay.operator('modeling_tools.modeling_ot_origin_to_bottom_center', icon='OBJECT_ORIGIN')
 
 
 class VIEW3D_PT_setdress(bpy.types.Panel):

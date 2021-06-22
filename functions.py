@@ -5,6 +5,8 @@
 
 import bpy
 import math
+import copy
+from mathutils import Vector
 
 
 ##############################################################################
@@ -163,3 +165,24 @@ def get_active_object_collection_offset(self) -> tuple:
     if not active_object_is_in_collection:
         return None
     return collection.instance_offset
+
+
+def origin_to_bottom_center(context):
+
+    objects = [ob for ob in context.selected_objects if ob.type == 'MESH' and not ob.data.library]
+    if len(objects) == 0:
+        raise RuntimeError('This tool only works with a selection of mesh objects.')
+
+    for ob in objects:
+        bbox_ws = [ob.matrix_world @ Vector(corner) for corner in ob.bound_box]
+        xmax = bbox_ws[4][0]
+        xmin = bbox_ws[0][0]
+        ymax = bbox_ws[3][1]
+        ymin = bbox_ws[0][1]
+        zmin = bbox_ws[0][2]
+        x = xmax - (xmax - xmin) / 2
+        y = ymax - (ymax - ymin) / 2
+        cursor_original = copy.copy(context.scene.cursor.location)
+        context.scene.cursor.location = (x, y, zmin)
+        bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
+        context.scene.cursor.location = cursor_original

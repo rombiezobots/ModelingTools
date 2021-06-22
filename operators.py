@@ -25,6 +25,17 @@ class MODELING_OT_select_unsubdivided(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
+    """Set the selected objects' origins to their bottom center"""
+
+    bl_idname = "modeling_tools.modeling_ot_origin_to_bottom_center"
+    bl_label = "Origin to Bottom Center"
+
+    def execute(self, context):
+        functions.origin_to_bottom_center(context)
+        return {'FINISHED'}
+
+
 class SETDRESS_OT_minimize_empties(bpy.types.Operator):
     """Minimize draw size for empties.\nOn selection or everything"""
 
@@ -116,6 +127,7 @@ class CT_OT_transfer_transforms(bpy.types.Operator):
 
 register, unregister = bpy.utils.register_classes_factory([
     MODELING_OT_select_unsubdivided,
+    MODELING_OT_origin_to_bottom_center,
     SETDRESS_OT_minimize_empties,
     SETDRESS_OT_set_collection_instance_offset,
     SETDRESS_OT_snap_rotation,
