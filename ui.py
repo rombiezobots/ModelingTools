@@ -91,7 +91,6 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
         set_b = context.scene.modeling_tools.copy_transforms.set_b
         lay = self.layout
         lay.scale_y = 1.5
-        lay.prop(context.scene.modeling_tools, 'rotation_or_face_normals')
         row_main = lay.row(align=True)
         row_main.operator('modeling_tools.ct_ot_selection_to_tt_set',
             text=f'From {len(set_a)}').tt_set='a'
@@ -99,6 +98,10 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
             icon='FORWARD', text='')
         row_main.operator('modeling_tools.ct_ot_selection_to_tt_set',
             text=f'To {len(set_b)}').tt_set='b'
+        row = lay.row()
+        row.scale_y = 0.75
+        row.prop(context.scene.modeling_tools.copy_transforms,
+            'rotation_or_face_normals')
         col_clear = lay.column(align=True)
         sub = col_clear.row(align=True)
         sub.operator('modeling_tools.ct_ot_clear_tt_set', icon='X',
