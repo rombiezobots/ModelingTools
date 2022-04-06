@@ -38,18 +38,20 @@ class MODELING_OT_select_unsubdivided(bpy.types.Operator):
     bl_label = 'Select Unsubdivided'
 
     def execute(self, context):
-        objects = [ob for ob in bpy.context.scene.objects if ob.type == 'MESH' and not is_datablock_linked(ob)]
+        objects = [ob for ob in bpy.context.scene.objects if ob.type == 'MESH'
+            and not is_datablock_linked(ob)]
         bpy.ops.object.select_all(action='DESELECT')
         for ob in objects:
             has_enabled_subsurf_modifiers = False
             for mod in ob.modifiers:
                 if mod.type == 'SUBSURF':
-                    has_enabled_subsurf_modifiers = mod.show_render and (mod.render_levels > 0 or ob.cycles.use_adaptive_subdivision)
+                    has_enabled_subsurf_modifiers = mod.show_render and (
+                        mod.render_levels > 0 or
+                        ob.cycles.use_adaptive_subdivision)
                     break
             if ob.name in bpy.context.view_layer.objects:
                 ob.select_set(not has_enabled_subsurf_modifiers)
         return {'FINISHED'}
-
 
 class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
     '''Set the selected objects' origins to their bottom center'''
@@ -58,12 +60,14 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
     bl_label = 'Origin to Bottom Center'
 
     def execute(self, context):
-        objects = [ob for ob in context.selected_objects if ob.type == 'MESH' and not is_datablock_linked(datablock=ob.data)]
+        objects = [ob for ob in context.selected_objects if ob.type == 'MESH'
+            and not is_datablock_linked(datablock=ob.data)]
         if len(objects) == 0:
             raise RuntimeError('This tool only works with a selection of mesh objects.')
 
         for ob in objects:
-            bbox_ws = [ob.matrix_world @ Vector(corner) for corner in ob.bound_box]
+            bbox_ws = [ob.matrix_world @ Vector(corner) for corner in
+                ob.bound_box]
             xmax = bbox_ws[4][0]
             xmin = bbox_ws[0][0]
             ymax = bbox_ws[3][1]
@@ -77,7 +81,6 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
             context.scene.cursor.location = cursor_original
         return {'FINISHED'}
 
-
 class MODELING_OT_subdiv_keep_corners(bpy.types.Operator):
     '''Enable Keep Corners on subdivision modifiers.\nOn selection or everything'''
 
@@ -86,15 +89,16 @@ class MODELING_OT_subdiv_keep_corners(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if ob.type == 'MESH' and not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in context.selected_objects if ob.type == 'MESH'
+                and not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if ob.type == 'MESH' and not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in bpy.data.objects if ob.type == 'MESH'
+                and not is_datablock_linked(datablock=ob)]
         for ob in objects:
             subdiv_mods = [m for m in ob.modifiers if m.type == 'SUBSURF']
             for mod in subdiv_mods:
                 mod.boundary_smooth = 'PRESERVE_CORNERS'
         return {'FINISHED'}
-
 
 class SETDRESS_OT_minimize_empties(bpy.types.Operator):
     '''Minimize draw size for empties.\nOn selection or everything'''
@@ -105,13 +109,14 @@ class SETDRESS_OT_minimize_empties(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if ob.type == 'EMPTY' and not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in context.selected_objects if ob.type == 'EMPTY'
+                and not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if ob.type == 'EMPTY' and not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in bpy.data.objects if ob.type == 'EMPTY'
+                and not is_datablock_linked(datablock=ob)]
         for ob in objects:
             ob.empty_display_size = 0
         return {'FINISHED'}
-
 
 class SETDRESS_OT_set_collection_instance_offset(bpy.types.Operator):
     '''Set the object's collections' instance offset to the object's origin.\nOn selection or everything.'''
@@ -122,15 +127,17 @@ class SETDRESS_OT_set_collection_instance_offset(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in context.selected_objects if
+                not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in bpy.data.objects if
+                not is_datablock_linked(datablock=ob)]
         for ob in objects:
-            collections = [coll for coll in bpy.data.collections if ob.name in coll.objects]
+            collections = [coll for coll in bpy.data.collections if ob.name
+                in coll.objects]
             for coll in collections:
                 coll.instance_offset = ob.location
         return {'FINISHED'}
-
 
 class SETDRESS_OT_snap_rotation(bpy.types.Operator):
     '''Snap rotation to 90-degree steps.\nOn selection or everything'''
@@ -141,9 +148,11 @@ class SETDRESS_OT_snap_rotation(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in context.selected_objects if
+                not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if not is_datablock_linked(datablock=ob)]
+            objects = [ob for ob in bpy.data.objects if
+                not is_datablock_linked(datablock=ob)]
         for ob in objects:
             for i in range(3):
                 original_in_degrees = math.degrees(ob.rotation_euler[i]) % 360
@@ -163,7 +172,6 @@ class SETDRESS_OT_snap_rotation(bpy.types.Operator):
                     ob.rotation_euler[i] = 0
         return {'FINISHED'}
 
-
 class CT_OT_delete_original_objects(bpy.types.Operator):
     '''Delete the original objects'''
 
@@ -171,48 +179,53 @@ class CT_OT_delete_original_objects(bpy.types.Operator):
     bl_label = 'Delete Original Objects'
     def execute(self, context):
         for wrapper_object in context.scene.modeling_tools.copy_transforms.set_a:
-            if bpy.data.objects[wrapper_object.obj_name]:
-                bpy.data.objects.remove(bpy.data.objects[wrapper_object.obj_name])
+            if wrapper_object.obj_name in bpy.data.objects.keys():
+                ob = bpy.data.objects[wrapper_object.obj_name]
+                bpy.data.objects.remove(ob)
                 print(f'Removed object {wrapper_object.obj_name}.')
         clear_tt_set(context, 'a')
         return {'FINISHED'}
-
 
 class CT_OT_selection_to_tt_set(bpy.types.Operator):
     '''Replace transfer transform list with selection of objects'''
 
     bl_idname = 'modeling_tools.ct_ot_selection_to_tt_set'
     bl_label = 'Replace With Selection'
-    tt_set: bpy.props.EnumProperty(items = [('a', 'A', 'List A'), ('b', 'B', 'List B')])
+    tt_set: bpy.props.EnumProperty(items = [
+        ('a', 'A', 'List A'),
+        ('b', 'B', 'List B')
+    ])
 
     def execute(self, context):
+        ct = context.scene.modeling_tools.copy_transforms
         clear_tt_set(context, self.tt_set)
         if self.tt_set == 'a':
             for ob in context.selected_objects:
                 if not ob.library:
-                    item = context.scene.modeling_tools.copy_transforms.set_a.add()
+                    item = ct.set_a.add()
                     item.obj_name = ob.name
         elif self.tt_set == 'b':
             for ob in context.selected_objects:
                 if not ob.library:
-                    item = context.scene.modeling_tools.copy_transforms.set_b.add()
+                    item = ct.set_b.add()
                     item.obj_name = ob.name
         else:
             raise RuntimeError('There\'s no active selection set.')
         return {'FINISHED'}
-
 
 class CT_OT_clear_tt_set(bpy.types.Operator):
     '''Clear all sharp edges in meshes.\nOn selection or everything'''
 
     bl_idname = 'modeling_tools.ct_ot_clear_tt_set'
     bl_label = 'Clear List'
-    tt_set: bpy.props.EnumProperty(items = [('a', 'A', 'List A'), ('b', 'B', 'List B')])
+    tt_set: bpy.props.EnumProperty(items = [
+        ('a', 'A', 'List A'),
+        ('b', 'B', 'List B')
+    ])
 
     def execute(self, context):
         clear_tt_set(context, self.tt_set)
         return {'FINISHED'}
-
 
 class CT_OT_copy_transforms(bpy.types.Operator):
     '''Copy transformation values from a set of objects to another'''
@@ -222,34 +235,34 @@ class CT_OT_copy_transforms(bpy.types.Operator):
     bl_options = {'UNDO'}
 
     def execute(self, context):
-        scene = context.scene
-        set_a = scene.modeling_tools.copy_transforms.set_a
-        set_b = scene.modeling_tools.copy_transforms.set_b
+        ct = context.scene.modeling_tools.copy_transforms
+        set_a = ct.set_a
+        set_b = ct.set_b
 
         if len(set_a) != len(set_b):
             raise RuntimeError('Both sets of objects must have equal length.')
 
         else:
             for ob in set_a:
-                if ob.obj_name not in scene.objects.keys():
+                if ob.obj_name not in context.scene.objects.keys():
                     raise RuntimeError(f'Object {ob.obj_name} doesn\'t exist anymore.')
             for ob in set_b:
-                if ob.obj_name not in scene.objects.keys():
+                if ob.obj_name not in context.scene.objects.keys():
                     raise RuntimeError(f'Object {ob.obj_name} doesn\'t exist anymore.')
             for index, ob in enumerate(set_b):
-                object_a = scene.objects[set_a[index].obj_name]
-                object_b = scene.objects[ob.obj_name]
-                if scene.modeling_tools.copy_transforms.rotation_or_face_normals == 'use_face_normals':
+                ob_a = context.scene.objects[set_a[index].obj_name]
+                ob_b = context.scene.objects[ob.obj_name]
+                if ct.rotation_or_face_normals == 'use_face_normals':
                     try:
-                        object_b.location = object_a.location
-                        object_b.rotation_euler = object_a.data.polygons[0].normal
-                        object_b.scale = object_a.scale
+                        ob_b.location = ob_a.location
+                        ob_b.rotation_euler = ob_a.data.polygons[0].normal
+                        ob_b.scale = ob_a.scale
                     except:
-                        raise RuntimeError(f'{object_a.data.name} is not a mesh, or it doesn\'t have any faces.')
+                        raise RuntimeError(f'{ob_a.data.name} is not a mesh, or it doesn\'t have any faces.')
                 else:
-                    object_b.location = object_a.location
-                    object_b.rotation_euler = object_a.rotation_euler
-                    object_b.scale = object_a.scale
+                    ob_b.location = ob_a.location
+                    ob_b.rotation_euler = ob_a.rotation_euler
+                    ob_b.scale = ob_a.scale
         return {'FINISHED'}
 
 
