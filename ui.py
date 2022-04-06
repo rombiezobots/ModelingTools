@@ -90,25 +90,21 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
         set_a = context.scene.modeling_tools.copy_transforms.set_a
         set_b = context.scene.modeling_tools.copy_transforms.set_b
         lay = self.layout
-        lay.scale_y = 1.5
-        row_main = lay.row(align=True)
-        row_main.operator('modeling_tools.ct_ot_selection_to_tt_set',
+        row = lay.row(align=True)
+        row.scale_y = 1.5
+        row.operator('modeling_tools.ct_ot_clear_tt_set', icon='X',
+            text='').tt_set='a'
+        row.operator('modeling_tools.ct_ot_selection_to_tt_set',
             text=f'From {len(set_a)}').tt_set='a'
-        row_main.operator('modeling_tools.ct_ot_copy_transforms',
+        row.operator('modeling_tools.ct_ot_copy_transforms',
             icon='FORWARD', text='')
-        row_main.operator('modeling_tools.ct_ot_selection_to_tt_set',
+        row.operator('modeling_tools.ct_ot_selection_to_tt_set',
             text=f'To {len(set_b)}').tt_set='b'
-        row = lay.row()
-        row.scale_y = 0.75
-        row.prop(context.scene.modeling_tools.copy_transforms,
+        row.operator('modeling_tools.ct_ot_clear_tt_set', icon='X',
+            text='').tt_set='b'
+        lay.prop(context.scene.modeling_tools.copy_transforms,
             'rotation_or_face_normals')
-        col_clear = lay.column(align=True)
-        sub = col_clear.row(align=True)
-        sub.operator('modeling_tools.ct_ot_clear_tt_set', icon='X',
-            text='Clear From').tt_set='a'
-        sub.operator('modeling_tools.ct_ot_clear_tt_set', icon='X',
-            text='Clear To').tt_set='b'
-        col_clear.operator('modeling_tools.ct_ot_delete_original_objects',
+        lay.operator('modeling_tools.ct_ot_delete_original_objects',
             icon='TRASH')
 
 
