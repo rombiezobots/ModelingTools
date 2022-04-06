@@ -51,11 +51,11 @@ class VIEW3D_PT_modeling(bpy.types.Panel):
 
     def draw(self, context):
         lay = self.layout
-        lay.scale_y = 1.5
-        col = lay.column(align=True)
-        col.operator('modeling_tools.modeling_ot_select_unsubdivided',
+        lay.operator('modeling_tools.modeling_ot_subdiv_keep_corners',
             icon='MOD_SUBSURF')
-        col.operator('modeling_tools.modeling_ot_origin_to_bottom_center',
+        lay.operator('modeling_tools.modeling_ot_select_unsubdivided',
+            icon='MOD_SUBSURF')
+        lay.operator('modeling_tools.modeling_ot_origin_to_bottom_center',
             icon='OBJECT_ORIGIN')
 
 class VIEW3D_PT_setdress(bpy.types.Panel):

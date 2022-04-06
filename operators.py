@@ -78,6 +78,24 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class MODELING_OT_subdiv_keep_corners(bpy.types.Operator):
+    '''Enable Keep Corners on subdivision modifiers.\nOn selection or everything'''
+
+    bl_idname = 'modeling_tools.modeling_ot_subdiv_keep_corners'
+    bl_label = 'Keep Corners in Subdivision'
+
+    def execute(self, context):
+        if len(context.selected_objects) > 0:
+            objects = [ob for ob in context.selected_objects if ob.type == 'MESH' and not is_datablock_linked(datablock=ob)]
+        else:
+            objects = [ob for ob in bpy.data.objects if ob.type == 'MESH' and not is_datablock_linked(datablock=ob)]
+        for ob in objects:
+            subdiv_mods = [m for m in ob.modifiers if m.type == 'SUBSURF']
+            for mod in subdiv_mods:
+                mod.boundary_smooth = 'PRESERVE_CORNERS'
+        return {'FINISHED'}
+
+
 class SETDRESS_OT_minimize_empties(bpy.types.Operator):
     '''Minimize draw size for empties.\nOn selection or everything'''
 
@@ -250,4 +268,5 @@ register, unregister = bpy.utils.register_classes_factory([
     SETDRESS_OT_minimize_empties,
     SETDRESS_OT_set_collection_instance_offset,
     SETDRESS_OT_snap_rotation,
+    MODELING_OT_subdiv_keep_corners,
 ])
