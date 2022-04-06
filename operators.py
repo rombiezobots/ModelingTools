@@ -58,7 +58,7 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
     bl_label = 'Origin to Bottom Center'
 
     def execute(self, context):
-        objects = [ob for ob in context.selected_objects if ob.type == 'MESH' and not ob.data.library]
+        objects = [ob for ob in context.selected_objects if ob.type == 'MESH' and not is_datablock_linked(datablock=ob.data)]
         if len(objects) == 0:
             raise RuntimeError('This tool only works with a selection of mesh objects.')
 
@@ -105,9 +105,9 @@ class SETDRESS_OT_minimize_empties(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if ob.type == 'EMPTY' and not ob.library]
+            objects = [ob for ob in context.selected_objects if ob.type == 'EMPTY' and not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if ob.type == 'EMPTY' and not ob.library]
+            objects = [ob for ob in bpy.data.objects if ob.type == 'EMPTY' and not is_datablock_linked(datablock=ob)]
         for ob in objects:
             ob.empty_display_size = 0
         return {'FINISHED'}
@@ -122,9 +122,9 @@ class SETDRESS_OT_set_collection_instance_offset(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if not ob.library]
+            objects = [ob for ob in context.selected_objects if not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if not ob.library]
+            objects = [ob for ob in bpy.data.objects if not is_datablock_linked(datablock=ob)]
         for ob in objects:
             collections = [coll for coll in bpy.data.collections if ob.name in coll.objects]
             for coll in collections:
@@ -141,9 +141,9 @@ class SETDRESS_OT_snap_rotation(bpy.types.Operator):
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
-            objects = [ob for ob in context.selected_objects if not ob.library]
+            objects = [ob for ob in context.selected_objects if not is_datablock_linked(datablock=ob)]
         else:
-            objects = [ob for ob in bpy.data.objects if not ob.library]
+            objects = [ob for ob in bpy.data.objects if not is_datablock_linked(datablock=ob)]
         for ob in objects:
             for i in range(3):
                 original_in_degrees = math.degrees(ob.rotation_euler[i]) % 360
