@@ -22,9 +22,11 @@ class VIEW3D_PT_modeling(bpy.types.Panel):
     def draw(self, context):
         lay = self.layout
         col = lay.column(align=True)
-        col.operator('modeling_tools.modeling_ot_subdiv_keep_corners',
-                     icon='MOD_SUBSURF')
         col.operator('modeling_tools.modeling_ot_select_unsubdivided',
+                     icon='MOD_SUBSURF')
+        col.operator('modeling_tools.modeling_ot_subdiv_disable_in_edit_mode',
+                     icon='MOD_SUBSURF')
+        col.operator('modeling_tools.modeling_ot_subdiv_keep_corners',
                      icon='MOD_SUBSURF')
         col.operator('modeling_tools.modeling_ot_origin_to_bottom_center',
                      icon='OBJECT_ORIGIN')

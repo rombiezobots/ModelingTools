@@ -114,6 +114,28 @@ class MODELING_OT_subdiv_keep_corners(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class MODELING_OT_subdiv_disable_in_edit_mode(bpy.types.Operator):
+    '''Disable Subdivision modifiers in Edit Mode.\nOn selection or everything'''
+
+    bl_idname = 'modeling_tools.modeling_ot_subdiv_disable_in_edit_mode'
+    bl_label = 'Disable Subdiv in Edit Mode'
+
+    def execute(self, context):
+        if len(context.selected_objects) > 0:
+            objects = [ob for ob in context.selected_objects
+                       if ob.type == 'MESH'
+                       and not common.is_datablock_linked(datablock=ob)]
+        else:
+            objects = [ob for ob in bpy.data.objects
+                       if ob.type == 'MESH'
+                       and not common.is_datablock_linked(datablock=ob)]
+        for ob in objects:
+            subdiv_mods = [m for m in ob.modifiers if m.type == 'SUBSURF']
+            for mod in subdiv_mods:
+                mod.show_in_editmode = False
+        return {'FINISHED'}
+
+
 ##############################################################################
 # Registration
 ##############################################################################
@@ -123,4 +145,5 @@ classes = [
     MODELING_OT_origin_to_bottom_center,
     MODELING_OT_select_unsubdivided,
     MODELING_OT_subdiv_keep_corners,
+    MODELING_OT_subdiv_disable_in_edit_mode,
 ]
