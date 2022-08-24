@@ -12,10 +12,11 @@ import bpy
 
 
 def clear_batch(context, batch: str):
+    ct = context.scene.modeling_tools.setdress.copy_transforms
     if batch == 'a':
-        context.scene.modeling_tools.copy_transforms.batch_from.clear()
+        ct.batch_from.clear()
     elif batch == 'b':
-        context.scene.modeling_tools.copy_transforms.batch_to.clear()
+        ct.batch_to.clear()
     else:
         raise RuntimeError('There\'s no active selection batch.')
 
@@ -32,7 +33,8 @@ class CT_OT_delete_original_objects(bpy.types.Operator):
     bl_label = 'Delete Original Objects'
 
     def execute(self, context):
-        for wrapper_object in context.scene.modeling_tools.copy_transforms.batch_from:
+        ct = context.scene.modeling_tools.setdress.copy_transforms
+        for wrapper_object in ct.batch_from:
             if wrapper_object.obj_name in bpy.data.objects.keys():
                 ob = bpy.data.objects[wrapper_object.obj_name]
                 bpy.data.objects.remove(ob)
@@ -52,7 +54,7 @@ class CT_OT_selection_to_batch(bpy.types.Operator):
     ])
 
     def execute(self, context):
-        ct = context.scene.modeling_tools.copy_transforms
+        ct = context.scene.modeling_tools.setdress.copy_transforms
         clear_batch(context, batch=self.batch)
         if self.batch == 'a':
             for ob in context.selected_objects:
@@ -92,7 +94,7 @@ class CT_OT_copy_transforms(bpy.types.Operator):
     bl_options = {'UNDO'}
 
     def execute(self, context):
-        ct = context.scene.modeling_tools.copy_transforms
+        ct = context.scene.modeling_tools.setdress.copy_transforms
         batch_from = ct.batch_from
         batch_to = ct.batch_to
 
