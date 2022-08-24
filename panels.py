@@ -9,8 +9,8 @@ if 'bpy' in locals():
     setdress = importlib.reload(setdress)
 else:
     import bpy
-    from .modeling import operators as modeling
-    from .setdress import operators as setdress
+    from .modeling import panels as modeling
+    from .setdress import panels as setdress
 
 
 ##############################################################################

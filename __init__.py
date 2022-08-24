@@ -1,6 +1,3 @@
-
-
-
 ################################################################################
 # Imports
 ################################################################################
@@ -9,12 +6,14 @@
 if 'bpy' in locals():
     import importlib
     operators = importlib.reload(operators)
-    ui = importlib.reload(ui)
+    properties = importlib.reload(properties)
+    panels = importlib.reload(panels)
 
 else:
     import bpy
+    from . import properties
     from . import operators
-    from . import ui
+    from . import panels
 
 
 ################################################################################
@@ -26,8 +25,8 @@ bl_info = {
     'name': 'Modeling Tools',
     'description': 'A few tools I\'ve written to facilitate modeling and setdress for productions in Blender.',
     'author': 'Sam Van Hulle',
-    'version': (0, 0, 1),
-    'blender': (2, 92, 0),
+    'version': (0, 0, 3),
+    'blender': (3, 3, 0),
     'location': 'View3D > UI',
     'category': 'Tools'
 }
@@ -39,17 +38,21 @@ bl_info = {
 
 
 modules = [
+    properties,
     operators,
-    ui
+    panels,
 ]
 
+
 def register():
-    for module in modules:
-        module.register()
+    for mod in modules:
+        mod.register()
+
 
 def unregister():
-    for module in reversed(modules):
-        module.unregister()
+    for mod in reversed(modules):
+        mod.unregister()
+
 
 if __name__ == '__main__':
     register()
