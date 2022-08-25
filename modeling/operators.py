@@ -136,6 +136,20 @@ class MODELING_OT_subdiv_disable_in_edit_mode(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class MODELING_OT_align_pivot_to_transform_orient(bpy.types.Operator):
+    '''Align the selected objects' origin to the current transform orientation'''
+
+    bl_idname = 'modeling_tools.modeling_ot_align_pivot_to_transform_orient'
+    bl_label = 'Set Rotation to Custom'
+
+    def execute(self, context):
+        old = context.scene.tool_settings.use_transform_data_origin
+        context.scene.tool_settings.use_transform_data_origin = True
+        bpy.ops.transform.transform(mode='ALIGN')
+        context.scene.tool_settings.use_transform_data_origin = old
+        return {'FINISHED'}
+
+
 ##############################################################################
 # Registration
 ##############################################################################
@@ -146,4 +160,5 @@ classes = [
     MODELING_OT_select_unsubdivided,
     MODELING_OT_subdiv_keep_corners,
     MODELING_OT_subdiv_disable_in_edit_mode,
+    MODELING_OT_align_pivot_to_transform_orient,
 ]

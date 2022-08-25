@@ -30,6 +30,8 @@ class VIEW3D_PT_modeling(bpy.types.Panel):
                      icon='MOD_SUBSURF')
         col.operator('modeling_tools.modeling_ot_origin_to_bottom_center',
                      icon='OBJECT_ORIGIN')
+        col.operator('modeling_tools.modeling_ot_align_pivot_to_transform_orient',
+                     icon='ORIENTATION_LOCAL')
 
 
 ##############################################################################
