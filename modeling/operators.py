@@ -46,7 +46,7 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
     '''Set the selected objects' origins to their bottom center'''
 
     bl_idname = 'modeling_tools.modeling_ot_origin_to_bottom_center'
-    bl_label = 'Origin to Bottom Center'
+    bl_label = 'Set to Bottom Center'
 
     def execute(self, context):
         objects = [ob for ob in context.selected_objects
@@ -103,7 +103,7 @@ class MODELING_OT_subdiv_keep_corners(bpy.types.Operator):
     '''Enable Keep Corners on subdivision modifiers.\nOn selection or everything'''
 
     bl_idname = 'modeling_tools.modeling_ot_subdiv_keep_corners'
-    bl_label = 'Keep Corners in Subdivision'
+    bl_label = 'Keep Corners'
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
@@ -125,7 +125,7 @@ class MODELING_OT_subdiv_disable_in_edit_mode(bpy.types.Operator):
     '''Disable Subdivision modifiers in Edit Mode.\nOn selection or everything'''
 
     bl_idname = 'modeling_tools.modeling_ot_subdiv_disable_in_edit_mode'
-    bl_label = 'Disable Subdiv in Edit Mode'
+    bl_label = 'Disable in Edit Mode'
 
     def execute(self, context):
         if len(context.selected_objects) > 0:
@@ -147,7 +147,7 @@ class MODELING_OT_align_pivot_to_transform_orient(bpy.types.Operator):
     '''Align the selected objects' origin to the current transform orientation'''
 
     bl_idname = 'modeling_tools.modeling_ot_align_pivot_to_transform_orient'
-    bl_label = 'Set Rotation to Custom'
+    bl_label = 'Align Rotation to Custom'
 
     def execute(self, context):
         old = context.scene.tool_settings.use_transform_data_origin
