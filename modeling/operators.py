@@ -65,6 +65,10 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
 
         # Loop over each object.
         for ob in objects:
+
+            # Save a copy of the object's original location.
+            object_original = copy.copy(ob.location)
+
             # Calculate the world space coordinates of its bounding box, take
             # half of its width and depth, and its lowest point.
             bbox_ws = [ob.matrix_world @ Vector(corner)
@@ -83,6 +87,9 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
             ob.select_set(True)
             bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
             ob.select_set(False)
+
+            # Move the object to its original location.
+            ob.location = object_original
 
         # Select the list of objects again, and restore the 3D Cursor.
         for ob in objects:
