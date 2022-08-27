@@ -21,26 +21,18 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
 
     def draw(self, context):
-        setdress = context.scene.modeling_tools.setdress
-        batch_from = setdress.copy_transforms.batch_from
-        batch_to = setdress.copy_transforms.batch_to
+        ct = context.scene.modeling_tools.setdress.copy_transforms
         lay = self.layout
-        row = lay.row(align=True)
-        row.scale_y = 1.5
-        row.operator('modeling_tools.ct_ot_clear_batch', icon='X',
-                     text='').batch = 'a'
-        row.operator('modeling_tools.ct_ot_selection_to_batch',
-                     text=f'From {len(batch_from)}').batch = 'a'
-        row.operator('modeling_tools.ct_ot_copy_transforms',
-                     icon='FORWARD', text='')
-        row.operator('modeling_tools.ct_ot_selection_to_batch',
-                     text=f'To {len(batch_to)}').batch = 'b'
-        row.operator('modeling_tools.ct_ot_clear_batch', icon='X',
-                     text='').batch = 'b'
-        lay.prop(setdress.copy_transforms,
-                 'rotation_or_face_normals')
-        lay.operator('modeling_tools.ct_ot_delete_original_objects',
-                     icon='TRASH')
+        col = lay.column(align=True)
+        row = col.split(factor=0.8)
+        row.prop(ct, 'collection_from')
+        row.label(
+            text=f'({len(ct.collection_from.objects) if ct.collection_from else 0})')
+        row = col.split(factor=0.8)
+        row.prop(ct, 'collection_to')
+        row.label(
+            text=f'({len(ct.collection_to.objects) if ct.collection_to else 0})')
+        lay.operator('modeling_tools.ct_copy_transforms', icon='PLAY')
 
 
 ##############################################################################
