@@ -28,10 +28,10 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
         col = lay.column(align=True)
         col.prop(ct, 'collection_from')
         col.prop(ct, 'collection_to')
-        len_coll_from = len(ct.collection_to.objects) \
-            if ct.collection_to else 0
-        len_coll_to = len(ct.collection_from.objects) \
+        len_coll_from = len(ct.collection_from.objects) \
             if ct.collection_from else 0
+        len_coll_to = len(ct.collection_to.objects) \
+            if ct.collection_to else 0
         lay.label(
             text=f'Copying from {len_coll_from} to {len_coll_to} objects.')
         row = lay.row()
