@@ -23,6 +23,8 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
     def draw(self, context):
         ct = context.scene.modeling_tools.setdress.copy_transforms
         lay = self.layout
+        lay.use_property_split = True
+        lay.use_property_decorate = False
         col = lay.column(align=True)
         row = col.split(factor=0.8)
         row.prop(ct, 'collection_from')
