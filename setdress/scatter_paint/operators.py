@@ -77,7 +77,7 @@ class SP_OT_scatter_paint(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         sp = context.scene.modeling_tools.setdress.scatter_paint
-        if not sp.scatter_objects and context.active_object:
+        if not (sp.scatter_objects and context.active_object):
             return False
         return (len(sp.scatter_objects.objects) > 0
                 and context.space_data.type == 'VIEW_3D'
