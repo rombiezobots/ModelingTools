@@ -36,11 +36,11 @@ class VIEW3D_PT_subdivision(bpy.types.Panel):
         lay = self.layout
         col = lay.column(align=True)
         col.operator('modeling_tools.modeling_ot_select_unsubdivided',
-                     icon='MOD_SUBSURF')
+                     icon='RESTRICT_SELECT_OFF')
         col.operator('modeling_tools.modeling_ot_subdiv_disable_in_edit_mode',
-                     icon='MOD_SUBSURF')
+                     icon='EDITMODE_HLT')
         col.operator('modeling_tools.modeling_ot_subdiv_keep_corners',
-                     icon='MOD_SUBSURF')
+                     icon='LINCURVE')
 
 
 class VIEW3D_PT_origins(bpy.types.Panel):

@@ -26,15 +26,17 @@ class VIEW3D_PT_copy_transforms(bpy.types.Panel):
         lay.use_property_split = True
         lay.use_property_decorate = False
         col = lay.column(align=True)
-        row = col.split(factor=0.8)
-        row.prop(ct, 'collection_from')
-        row.label(
-            text=f'({len(ct.collection_from.objects) if ct.collection_from else 0})')
-        row = col.split(factor=0.8)
-        row.prop(ct, 'collection_to')
-        row.label(
-            text=f'({len(ct.collection_to.objects) if ct.collection_to else 0})')
-        lay.operator('modeling_tools.ct_copy_transforms', icon='PLAY')
+        col.prop(ct, 'collection_from')
+        col.prop(ct, 'collection_to')
+        len_coll_from = len(ct.collection_to.objects) \
+            if ct.collection_to else 0
+        len_coll_to = len(ct.collection_from.objects) \
+            if ct.collection_from else 0
+        lay.label(
+            text=f'Copying from {len_coll_from} to {len_coll_to} objects.')
+        row = lay.row()
+        row.scale_y = 1.5
+        row.operator('modeling_tools.ct_copy_transforms', icon='PLAY')
 
 
 ##############################################################################
