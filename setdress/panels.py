@@ -6,10 +6,10 @@
 if 'bpy' in locals():
     import importlib
     copy_transforms = importlib.reload(copy_transforms)
-    # scatter_paint = importlib.reload(scatter_paint)
+    scatter_paint = importlib.reload(scatter_paint)
 else:
     from .copy_transforms import panels as copy_transforms
-    # from .scatter_paint import panels as scatter_paint
+    from .scatter_paint import panels as scatter_paint
     import bpy
 
 
@@ -44,4 +44,4 @@ class VIEW3D_PT_setdress(bpy.types.Panel):
 
 classes = [
     VIEW3D_PT_setdress,
-] + copy_transforms.classes
+] + copy_transforms.classes + scatter_paint.classes

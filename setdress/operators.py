@@ -7,11 +7,11 @@ if 'bpy' in locals():
     import importlib
     common = importlib.reload(common)
     copy_transforms = importlib.reload(copy_transforms)
-    # scatter_paint = importlib.reload(scatter_paint)
+    scatter_paint = importlib.reload(scatter_paint)
 else:
     from .. import common
     from .copy_transforms import operators as copy_transforms
-    # from .scatter_paint import operators as scatter_paint
+    from .scatter_paint import operators as scatter_paint
     import bpy
     import math
 
@@ -107,4 +107,4 @@ classes = [
     SETDRESS_OT_minimize_empties,
     SETDRESS_OT_set_collection_instance_offset,
     SETDRESS_OT_snap_rotation,
-] + copy_transforms.classes
+] + copy_transforms.classes + scatter_paint.classes
