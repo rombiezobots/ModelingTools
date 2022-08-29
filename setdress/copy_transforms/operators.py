@@ -21,7 +21,10 @@ class CT_OT_copy_transforms(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         ct = context.scene.modeling_tools.setdress.copy_transforms
-        return len(ct.collection_from.objects) == len(ct.collection_to.objects)
+        if ct.collection_from and ct.collection_to:
+            return len(ct.collection_from.objects) == len(ct.collection_to.objects) and not len(ct.collection_from.objects) == 0
+        else:
+            return False
 
     def execute(self, context):
         ct = context.scene.modeling_tools.setdress.copy_transforms
