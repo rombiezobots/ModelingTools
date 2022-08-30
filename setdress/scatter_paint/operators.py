@@ -3,11 +3,12 @@
 ##############################################################################
 
 
+import random
+import mathutils
+import math
 import bpy
 import bmesh
-import mathutils
 from bpy_extras import view3d_utils
-import random
 
 
 ###############################################################################
@@ -40,11 +41,14 @@ def get_largest_dimension(ob):
     return max(ob.dimensions[0], ob.dimensions[1], ob.dimensions[2])
 
 
-def get_variance(x, y, z):
+def get_rotation(xdeg, ydeg, zdeg):
+    xrad = math.radians(xdeg)
+    yrad = math.radians(ydeg)
+    zrad = math.radians(zdeg)
     return mathutils.Vector((
-        random.uniform(-x, x),
-        random.uniform(-y, y),
-        random.uniform(-z, z)
+        random.uniform(-xrad, xrad),
+        random.uniform(-yrad, yrad),
+        random.uniform(-zrad, zrad)
     ))
 
 
@@ -149,9 +153,9 @@ class SP_OT_scatter_paint(bpy.types.Operator):
         instance = bpy.data.objects.new(name=next_src_ob.name,
                                         object_data=next_src_ob.data)
         instance.location = pos
-        instance.rotation_euler = normal + get_variance(x=sp.rot_var_x,
-                                                        y=sp.rot_var_y,
-                                                        z=sp.rot_var_z)
+        instance.rotation_euler = normal + get_rotation(xdeg=sp.rot_var_x,
+                                                        ydeg=sp.rot_var_y,
+                                                        zdeg=sp.rot_var_z)
         instance.scale[0] = instance.scale[1] = instance.scale[2] = random.uniform(
             a=sp.scale_min, b=sp.scale_max)
         sp.container.objects.link(instance)
@@ -159,6 +163,7 @@ class SP_OT_scatter_paint(bpy.types.Operator):
         if next_src_ob.type == 'EMPTY':
             instance.instance_type = next_src_ob.instance_type
             instance.instance_collection = next_src_ob.instance_collection
+            instance.empty_display_size = next_src_ob.empty_display_size
         return instance
 
 
