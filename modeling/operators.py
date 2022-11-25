@@ -47,6 +47,10 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
 
     bl_idname = 'modeling_tools.modeling_ot_origin_to_bottom_center'
     bl_label = 'Set to Bottom Center'
+    bl_options = {'REGISTER', 'UNDO'}
+
+    move_geo: bpy.props.BoolProperty(name='Move Geometry',
+                                     default=False)
 
     def execute(self, context):
         objects = [ob for ob in context.selected_objects
@@ -56,7 +60,7 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
             raise RuntimeError(
                 'This tool only works with a selection of mesh objects.')
 
-         # Deselect all objects first, otherwise each of their origins will be
+        # Deselect all objects first, otherwise each of their origins will be
         # overwritten by the current object in the loop. Also save a copy of the
         # 3D Cursor's location.
         for ob in objects:
@@ -88,8 +92,9 @@ class MODELING_OT_origin_to_bottom_center(bpy.types.Operator):
             bpy.ops.object.origin_set(type='ORIGIN_CURSOR')
             ob.select_set(False)
 
-            # Move the object to its original location.
-            ob.location = object_original
+            # Optionally move the object to its original location.
+            if self.move_geo:
+                ob.location = object_original
 
         # Select the list of objects again, and restore the 3D Cursor.
         for ob in objects:
