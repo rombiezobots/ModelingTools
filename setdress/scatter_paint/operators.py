@@ -3,11 +3,12 @@
 ##############################################################################
 
 
+import random
+import mathutils
+import math
 import bpy
 import bmesh
-import mathutils
 from bpy_extras import view3d_utils
-import random
 
 
 ###############################################################################
@@ -40,11 +41,14 @@ def get_largest_dimension(ob):
     return max(ob.dimensions[0], ob.dimensions[1], ob.dimensions[2])
 
 
-def get_variance(x, y, z):
+def get_rotation(xdeg, ydeg, zdeg):
+    xrad = math.radians(xdeg)
+    yrad = math.radians(ydeg)
+    zrad = math.radians(zdeg)
     return mathutils.Vector((
-        random.uniform(-x, x),
-        random.uniform(-y, y),
-        random.uniform(-z, z)
+        random.uniform(-xrad, xrad),
+        random.uniform(-yrad, yrad),
+        random.uniform(-zrad, zrad)
     ))
 
 
@@ -73,6 +77,7 @@ class SP_OT_scatter_paint(bpy.types.Operator):
     bl_options = {'REGISTER', 'UNDO'}
 
     is_painting: bpy.props.BoolProperty(default=False)
+    object_index: bpy.props.IntProperty(default=0)
 
     @classmethod
     def poll(cls, context):
@@ -100,8 +105,8 @@ class SP_OT_scatter_paint(bpy.types.Operator):
 
         # Exit on pressing Escape or Enter, or right-clicking.
         if event.type in ['ESC', 'RET', ]:
-            # bpy.context.area.tag_redraw()
             bpy.context.window.cursor_set(cursor='DEFAULT')
+            self.object_index = 0
             return {'FINISHED'}
 
         # Set the self.is_painting boolean depending on what the mouse is doing.
@@ -144,14 +149,14 @@ class SP_OT_scatter_paint(bpy.types.Operator):
         # the next object in the collection.
         sp = bpy.context.scene.modeling_tools.setdress.scatter_paint
         objects = sp.scatter_objects.objects
-        next_src_ob = objects[0]
+        next_src_ob = objects[self.object_index]
         # Create an instance of the object.
         instance = bpy.data.objects.new(name=next_src_ob.name,
                                         object_data=next_src_ob.data)
         instance.location = pos
-        instance.rotation_euler = normal + get_variance(x=sp.rot_var_x,
-                                                        y=sp.rot_var_y,
-                                                        z=sp.rot_var_z)
+        instance.rotation_euler = normal + get_rotation(xdeg=sp.rot_var_x,
+                                                        ydeg=sp.rot_var_y,
+                                                        zdeg=sp.rot_var_z)
         instance.scale[0] = instance.scale[1] = instance.scale[2] = random.uniform(
             a=sp.scale_min, b=sp.scale_max)
         sp.container.objects.link(instance)
@@ -159,6 +164,12 @@ class SP_OT_scatter_paint(bpy.types.Operator):
         if next_src_ob.type == 'EMPTY':
             instance.instance_type = next_src_ob.instance_type
             instance.instance_collection = next_src_ob.instance_collection
+            instance.empty_display_size = next_src_ob.empty_display_size
+        # Increment or reset the object counter
+        if self.object_index == len(objects) - 1:
+            self.object_index = 0
+        else:
+            self.object_index += 1
         return instance
 
 
